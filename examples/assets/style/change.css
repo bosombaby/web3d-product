@@ -1,0 +1,41 @@
+.info {
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: 50%;
+  color: #666;
+  z-index: 1; /* TODO Solve this in HTML */
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.base .introduction .title {
+  text-align: center;
+  font-size: 28px;
+  margin: 15px 0;
+  color: #333;
+}
+.base .introduction p {
+  font-size: 16px;
+  text-indent: 2em;
+}
+.base .author {
+  display: flex;
+  justify-content: space-around;
+  font-size: 16px;
+  margin-top: 10px;
+}
+.base .author a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 500px) {
+  .info {
+    width: 100%;
+    left: 0;
+  }
+}

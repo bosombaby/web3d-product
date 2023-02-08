@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Shortcut Icon" href="../assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../assets/style/normalize.css">
+    <title>虚幻花朵</title>
+</head>
+
+<body>
+
+    <!--    
+    time:2023/1/26
+    author:bosom
+    details: 借鉴官网webgl_postprocessing_unreal_bloom.html例子
+-->
+
+    <script type="importmap">
+        {
+            "imports":{
+                "three":"../assets/js/three/build/three.module.js",
+                "three/examples/jsm/":"../assets/js/three/jsm/"
+            }
+        }
+    </script>
+    <canvas class="webgl"></canvas>
+
+
+
+    <script type="module">
+        import * as THREE from 'three'
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+        import Stats from 'three/examples/jsm/libs/stats.module.js'
+        import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
+
+
+        //模型加载
+        import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+        //后期处理
+        import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+        import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+        // 后期光晕处理
+        import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+
+
+        let canvas
+        let scene, camera, renderer, composer
+        let stats, gui, controls
+        let mixer, clock
+
+
+        //像素比
+        const sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        }
+
+        // 曝光级别（默认1）、泛光强度、半径、阈值
+        const params = {
+            exposure: 1.6,
+            bloomStrength: 2.5,
+            bloomRadius: 0,
+            bloomThreshold: 0,
+        }
+
+
+
+        //初始化操作
+        let init = () => {
+            // 获取dom元素
+            canvas = document.querySelector('.webgl')
+
+            // 启用clock
+            clock = new THREE.Clock()
+
+            // 场景初始化
+            scene = new THREE.Scene()
+
+            // 添加环境光
+            const light = new THREE.AmbientLight(0x404040)
+            scene.add(light)
+
+
+
+            //相机
+            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height)
+            camera.position.set(5, 5, 5)
+            camera.lookAt(scene.position)
+
+
+            //渲染器
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
+            renderer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(window.devicePixelRatio)
+            // 色调映射
+            renderer.toneMapping = THREE.ReinhardToneMapping
+            renderer.toneMappingExposure = Math.pow(params.exposure, 4.0)
+
+
+
+            // 后期处理
+            const renderScene = new RenderPass(scene, camera)
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(sizes.width, sizes.height), 2.5, 0, 0)
+
+
+
+            composer = new EffectComposer(renderer)
+            composer.addPass(renderScene)
+            composer.addPass(bloomPass)
+
+
+
+            //加载模型
+            new GLTFLoader().load('../assets/models/gltf/PrimaryIonDrive.glb', (gltf) => {
+                const model = gltf.scene
+                scene.add(model)
+                // 动画播放器
+                mixer = new THREE.AnimationMixer(model)
+                const clip = gltf.animations[0]
+
+                // 传入一个唯一化uuid
+                mixer.clipAction(clip).play()
+
+                animate()
+            })
+
+            gui = new GUI()
+            gui.add(params, 'exposure', 0.1, 2).name('曝光度').onChange((value) => {
+                renderer.toneMappingExposure = Math.pow(value, 4.0)
+            })
+
+            gui.add(params, 'bloomStrength', 0.0, 3).name('强度').onChange((value) => {
+                bloomPass.strength = Number(value)
+            })
+
+            gui.add(params, 'bloomRadius', 0, 1).name('半径').onChange((value) => {
+                bloomPass.radius = Number(value)
+            })
+
+            gui.add(params, 'bloomThreshold', 0, 1).name('阈值').onChange((value) => {
+                bloomPass.threshold = Number(value)
+
+            })
+
+
+            //控制器
+            controls = new OrbitControls(camera, renderer.domElement)
+            controls.enableDamping = true
+
+            //帧率检测
+            stats = new Stats()
+            document.body.appendChild(stats.domElement)
+
+
+        }
+        // 自适应屏幕
+        let onWindowsResize = () => {
+
+            sizes.width = window.innerWidth
+            sizes.height = window.innerHeight
+            camera.aspect = sizes.width / sizes.height
+            camera.updateProjectionMatrix()
+            renderer.setSize(sizes.width, sizes.height)
+            composer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(window.devicePixelRatio)
+
+        }
+
+        //双击全屏
+        let onWindowsScreen = () => {
+            let isFullScreen = document.fullscreenElement
+            if (!isFullScreen) {
+                renderer.domElement.requestFullscreen()
+            } else {
+                document.exitFullscreen()
+            }
+        }
+
+
+        let expandFunction = () => {
+            window.addEventListener('resize', onWindowsResize)
+            window.addEventListener('dblclick', onWindowsScreen)
+
+        }
+
+        let animate = () => {
+
+            // 更新动画
+            const delta = clock.getDelta()
+            mixer.update(delta)
+            stats.update()
+            composer.render()
+            // renderer.render()
+            requestAnimationFrame(animate)
+        }
+
+
+        init()
+        expandFunction()     
+    </script>
+</body>
+
+</html>
