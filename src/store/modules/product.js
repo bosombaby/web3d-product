@@ -5,7 +5,7 @@ const useProductStore = defineStore('product', {
         return {
             mainList: [
                 { title: '最新作品', single: true },
-                { title: '粒子平面墙', link: '../../examples/Particles/points_wall.html', author: '' },
+                { title: '粒子平面墙', link: '../../../examples/Particles/points_wall.html', author: '' },
                 { title: '粒子海浪', link: 'examples/Particles/particles_sea.html', author: '' },
                 { title: '银河系', link: 'examples/Particles/galaxy_generator.html', author: '' },
 
