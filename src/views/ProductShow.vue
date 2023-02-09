@@ -1,12 +1,6 @@
 <template>
     <canvas id="c"></canvas>
     <div class="container">
-        <!-- <div class="setting">
-            <el-icon :size="20">
-                <Tools />
-            </el-icon>
-        </div> -->
-
         <div class="top-header">
             作品展示平台
         </div>
@@ -26,6 +20,10 @@
                 
             </div>
             
+        </div>
+
+        <div class="back-top" @click="backTop">
+            <img src="../assets/img/rocket.png" alt="">
         </div>
     </div>
 </template>
@@ -114,7 +112,7 @@ let init = () => {
 
     //帧率检测
     stats = new Stats()
-    content.appendChild(stats.domElement)
+    document.body.appendChild(stats.domElement)
 
     // 渲染器
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
@@ -124,27 +122,36 @@ let init = () => {
 
 //生成菜单设置
 let createPanel = () => {
-    const  panel = new GUI({width:150})
-
-    const folder1 = panel.addFolder('鼠标控制')
-    const folder2 = panel.addFolder('物体控制')
-    const folder3 = panel.addFolder('灯光控制')
-    const folder4 = panel.addFolder('随机样式')
+    gui = new GUI({ width: 150 })
+    const folder1 = gui.addFolder('鼠标控制')
+    const folder2 = gui.addFolder('物体控制')
+    const folder3 = gui.addFolder('灯光控制')
+    const folder4 = gui.addFolder('随机样式')
 
     folder1.add(orbit,'autoRotate').name('自旋转')
     folder1.add(orbit, 'autoRotateSpeed', 0, 0.01, 0.001).name('旋转速度')
 
 
-    panel.close()
+    gui.close()
 
 }
 
+// 展示顶部
+let isShowTopDom=true
 // 渲染画布尺寸
 let updateSize = () => {
     const width = canvas.clientWidth
     const height = canvas.clientHeight
     renderer.setSize(width, height, false);
-
+    if (width <= 600 && isShowTopDom) {
+        stats.domElement.style.display = 'none'
+        gui.domElement.style.display = 'none'
+        isShowTopDom =false
+    } else if (width > 600 && !isShowTopDom) {
+        stats.domElement.style.display = 'block'
+        gui.domElement.style.display ='block'
+        isShowTopDom = true
+    }
 }
 
 let  render= () =>{
@@ -185,7 +192,9 @@ let  render= () =>{
     })
 
     // 帧率检测
-    stats.update()
+   
+        stats.update()
+    
 }
 
 // 动画渲染
@@ -203,6 +212,16 @@ let onWindowsScreen = () => {
         document.exitFullscreen()
     }
 }
+
+// 返回顶部
+let backTop = () => {
+    window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+    })
+}
+
 // 扩展功能
 let expandFunction = () => {
     window.addEventListener('dblclick',onWindowsScreen)
@@ -293,6 +312,12 @@ onMounted(() => {
         }
     }
 
+    .back-top{
+        position: fixed;
+        right: 1%;
+        bottom: 3%;
+        cursor: pointer;
+    }
 }
 
 
@@ -309,4 +334,5 @@ onMounted(() => {
     }
 
 }
+
 </style>

@@ -3,10 +3,6 @@ import { defineStore } from 'pinia'
 const useSettingStore = defineStore('setting', {
     state: () => {
         return {
-
-
-
-
             params: {
                 orbit: {
                     autoRotate: true,
