@@ -35,6 +35,9 @@ const useProductStore = defineStore('product', {
                 {title:'二维漫画',single:true},
                 { title: '漫画-蜘蛛侠', link: 'examples/comic/spider-man.html', author: '' },
 
+                {title:'融合前端HTML',single:true},
+                { title: '页面滚动', link: 'examples/mixed_html/scroll_page.html', author: '' },
+
 
                 {title:'3d可视化',single:true},
                 { title: '电脑主机拆解', link: 'examples/visualization/computer_host.html', author: '' },

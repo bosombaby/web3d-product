@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Shortcut Icon" href="../assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../assets/style/normalize.css">
+    <style>
+        html,
+        body {
+            overflow-y: scroll;
+        }
+        .section{
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            font-family: 'Cabin', sans-serif;
+            color: #ffeded;
+            text-transform: uppercase;
+            font-size: 7vmin;
+            padding-left: 10%;
+            padding-right: 10%;
+        }
+        .section:nth-child(even){
+            justify-content: flex-end;
+        }
+    </style>
+    <title>滚动HTML页面</title>
+</head>
+
+<body>
+
+    <!--    
+    time:
+    author:
+    details: 
+-->
+
+    <script type="importmap">
+        {
+            "imports":{
+                "three":"../assets/js/three/build/three.module.js",
+                "three/examples/jsm/":"../assets/js/three/jsm/"
+            }
+        }
+    </script>
+    <canvas class="webgl"></canvas>
+    <div class="section">
+        <h1>Page1</h1>
+    </div>
+    <div class="section">
+        <h1>Page2</h1>
+    </div>
+    <div class="section">
+        <h1>Page3</h1>
+    </div>
+    <script type="module">
+        import * as THREE from 'three'
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+        import Stats from 'three/examples/jsm/libs/stats.module.js'
+        import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
+
+        let canvas
+        let scene, camera, renderer, cameraGroup
+        let stats, controls, gui
+
+        //像素比
+        const sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        }
+
+        //初始化操作
+        let init = () => {
+            // 获取dom元素
+            canvas = document.querySelector('.webgl')
+
+            // 场景初始化
+            scene = new THREE.Scene()
+
+
+            // 添加环境光,环境光太强会损失表面梯度贴图
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+            directionalLight.position.set(5, 5, 0)
+            scene.add(directionalLight)
+
+            //相机
+            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 1, 1000)
+            camera.position.set(0, 0, 5)
+            camera.lookAt(scene.position)
+
+            // camera可以不添加到场景中,group必须加入场景中,否则会出错
+            cameraGroup = new THREE.Group()
+            cameraGroup.add(camera)
+            scene.add(cameraGroup)
+
+
+            //渲染器
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
+            renderer.setSize(sizes.width, sizes.height)
+            // renderer.setClearColor('lightsalmon', 0.5)
+            renderer.setPixelRatio(window.devicePixelRatio)
+
+
+
+
+            //控制器
+            controls = new OrbitControls(camera, renderer.domElement)
+            controls.enableDamping = true
+
+            //帧率检测
+            stats = new Stats()
+            document.body.appendChild(stats.domElement)
+
+
+        }
+        // 自适应屏幕
+        let onWindowsResize = () => {
+
+            sizes.width = window.innerWidth
+            sizes.height = window.innerHeight
+            camera.aspect = sizes.width / sizes.height
+            camera.updateProjectionMatrix()
+            renderer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(window.devicePixelRatio)
+        }
+
+        //双击全屏
+        let onWindowsScreen = () => {
+            let isFullScreen = document.fullscreenElement
+            if (!isFullScreen) {
+                renderer.domElement.requestFullscreen()
+            } else {
+                document.exitFullscreen()
+            }
+        }
+
+
+        let expandFunction = () => {
+            window.addEventListener('resize', onWindowsResize)
+            window.addEventListener('dblclick', onWindowsScreen)
+
+        }
+
+        let mesh1, mesh2, mesh3
+        const sectionMeshes = []
+        const objectsDistance = 5
+
+        // 粒子
+        let particles = null
+        let count = 1000
+        let createModel = () => {
+            // 创建三个mesh
+            const textureLoader = new THREE.TextureLoader()
+            const gradientTexture = textureLoader.load('../assets/img/gradient/3.jpg')
+            gradientTexture.magFilter = THREE.NearestFilter
+            const material = new THREE.MeshToonMaterial({
+                color: '#ffeded',
+                gradientMap: gradientTexture
+            })
+
+            mesh1 = new THREE.Mesh(
+                new THREE.TorusGeometry(1, 0.4, 16, 60),
+                material
+            )
+            mesh2 = new THREE.Mesh(
+                new THREE.ConeGeometry(1, 2, 32),
+                material
+            )
+            mesh3 = new THREE.Mesh(
+                new THREE.TorusKnotGeometry(0.8, 0.35, 100, 16),
+                material
+            )
+
+            mesh1.position.x = 2
+            mesh2.position.x = - 2
+            mesh3.position.x = 2
+
+            mesh1.position.y = - objectsDistance * 0
+            mesh2.position.y = - objectsDistance * 1
+            mesh3.position.y = - objectsDistance * 2
+
+            sectionMeshes.push(mesh1, mesh2, mesh3)
+
+            scene.add(mesh1, mesh2, mesh3)
+
+            //创建粒子
+            const pointsGeometry = new THREE.BufferGeometry()
+            const vertexes = new Float32Array(count * 3)
+            const pointsMaterial = new THREE.PointsMaterial({
+                size: 0.015,
+                sizeAttenuation: true
+            })
+
+            for (let i = 0; i < count * 3; i++) {
+
+                const i3 = i * 3
+                vertexes[i3] = (Math.random() - 0.5) * 10
+                vertexes[i3 + 1] = objectsDistance * 0.5 - Math.random() * objectsDistance * sectionMeshes.length
+                vertexes[i3 + 2] = (Math.random() - 0.5) * 10
+            }
+            const points = new THREE.BufferAttribute(vertexes, 3)
+            pointsGeometry.setAttribute('position', points)
+            particles = new THREE.Points(pointsGeometry, pointsMaterial)
+            particles.name = 'particles'
+            scene.add(particles)
+        }
+
+        let scrollY = window.scrollY
+        let cursor = { x: 0, y: 0 }
+
+        let currentPage = 0, previousPage = 0
+        let mouseControl = () => {
+            // 滚动界面时移动相机
+            window.addEventListener('scroll', () => {
+                scrollY = window.scrollY
+            })
+
+            //物体移动
+            window.addEventListener('mousemove', (event) => {
+                cursor.x = event.clientX / sizes.width - 0.5
+                cursor.y = -(event.clientY / sizes.height) + 0.5
+            })
+        }
+
+
+        const clock = new THREE.Clock()
+        let previousTime = 0
+        let animate = () => {
+
+            let elapsedTime = clock.getElapsedTime()
+            let deltaTime = elapsedTime - previousTime
+            previousTime = elapsedTime
+
+            // 随着滚动相机跟随
+            camera.position.y = -scrollY / sizes.height * objectsDistance
+
+            const parallaX = cursor.x * 0.5
+            const parallaY = cursor.y * 0.5
+            cameraGroup.position.x += (parallaX - cameraGroup.position.x) * deltaTime * 5
+            cameraGroup.position.y += (parallaY - cameraGroup.position.y) * deltaTime * 5
+
+            for (const mesh of sectionMeshes) {
+
+                mesh.rotation.x += deltaTime * 0.08
+                mesh.rotation.y += deltaTime * 0.5
+            }
+
+            stats.update()
+            renderer.render(scene, camera)
+            requestAnimationFrame(animate)
+        }
+
+
+        init()
+        createModel()
+        mouseControl()
+        animate()
+        expandFunction()
+    </script>
+</body>
+
+</html>

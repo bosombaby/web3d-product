@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Shortcut Icon" href="../assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../assets/style/normalize.css">
+    <title>基础阴影投射</title>
+</head>
+
+<body>
+
+    <!--    
+    time:2023/2/2
+    author:bosom
+    details: 基础阴影投射
+-->
+
+    <script type="importmap">
+        {
+            "imports":{
+                "three":"../assets/js/three/build/three.module.js",
+                "three/examples/jsm/":"../assets/js/three/jsm/"
+            }
+        }
+    </script>
+    <canvas class="webgl"></canvas>
+
+
+
+    <script type="module">
+        import * as THREE from 'three'
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+        import Stats from 'three/examples/jsm/libs/stats.module.js'
+        import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
+
+        let canvas
+        let scene, camera, renderer
+        let stats, controls, gui
+        let plane, sphere, sphereShadow
+
+
+        //像素比
+        const sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        }
+
+        //出现阴影四步走
+        // 灯光cast=>球体cast=>平面receive=>renderer设置
+
+
+
+        // 光照计算、阴影生成
+        let lightShadowMap = () => {
+
+            //环境光
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+            scene.add(ambientLight)
+
+            //直射光
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+            scene.add(directionalLight)
+
+            directionalLight.position.set(2, 2, -1)
+            directionalLight.castShadow = true
+            directionalLight.shadow.mapSize.width = 1024
+            directionalLight.shadow.mapSize.height = 1024
+            directionalLight.shadow.camera.near = 1
+            directionalLight.shadow.camera.far = 6
+            directionalLight.shadow.camera.top = 2
+            directionalLight.shadow.camera.right = 2
+            directionalLight.shadow.camera.bottom = - 2
+            directionalLight.shadow.camera.left = - 2
+
+            directionalLight.shadow.radius = 10
+
+            //只是实体化的工具，参数修改上面的
+            const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
+            scene.add(directionalLightCameraHelper)
+            directionalLightCameraHelper.visible = false
+
+            //聚光灯
+            const spotLight = new THREE.SpotLight(0xffffff, 0.3, 10, Math.PI * 0.3)
+            scene.add(spotLight)
+            scene.add(spotLight.target)
+            spotLight.position.set(0, 2, 2)
+            spotLight.castShadow = true
+            spotLight.shadow.mapSize.width = 1024
+            spotLight.shadow.mapSize.height = 1024
+
+            spotLight.shadow.camera.near = 1
+            spotLight.shadow.camera.far = 6
+
+            spotLight.shadow.camera.fov = 30
+
+
+            const spotLightCameraHelper = new THREE.CameraHelper(spotLight.shadow.camera)
+            scene.add(spotLightCameraHelper)
+            spotLightCameraHelper.visible = false
+
+            //点光源
+            const pointLight = new THREE.PointLight(0xffffff, 0.1)
+            pointLight.position.set(-1, 1, 0)
+            scene.add(pointLight)
+
+            pointLight.castShadow = true
+            pointLight.shadow.mapSize.width = 1024
+            pointLight.shadow.mapSize.height = 1024
+
+            pointLight.shadow.camera.near = 0.1
+            pointLight.shadow.camera.far = 3
+
+            const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera)
+            scene.add(pointLightCameraHelper)
+            pointLightCameraHelper.visible = false
+
+
+
+        }
+
+        let initLight = () => {
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+            scene.add(ambientLight)
+
+            //直射光
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
+            scene.add(directionalLight)
+
+
+            //聚光灯
+            const spotLight = new THREE.SpotLight(0xffffff, 0.3, 10, Math.PI * 0.3)
+            scene.add(spotLight)
+            scene.add(spotLight.target)
+
+
+            //点光源
+            const pointLight = new THREE.PointLight(0xffffff, 0.1)
+            pointLight.position.set(-1, 1, 0)
+            scene.add(pointLight)
+        }
+
+        //初始化操作
+        let init = () => {
+            // 获取dom元素
+            canvas = document.querySelector('.webgl')
+
+            // 场景初始化
+            scene = new THREE.Scene()
+
+            initLight()
+
+            // 烘培贴图
+            const textureLoader = new THREE.TextureLoader()
+            const bakedShadow = textureLoader.load('../assets/img/shadow/bakedShadow.jpg')
+            const simpleShadow = textureLoader.load('../assets/img/shadow/simpleShadow.jpg')
+            const material = new THREE.MeshStandardMaterial({ map: bakedShadow })
+
+            sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(0.5, 32, 32),
+                new THREE.MeshStandardMaterial()
+            )
+            sphere.castShadow = true
+
+            sphereShadow = new THREE.Mesh(
+                new THREE.PlaneGeometry(1),
+                new THREE.MeshBasicMaterial({
+                    color: 0x000000,
+                    alphaMap: simpleShadow,
+                    transparent: true,
+                })
+            )
+            sphereShadow.rotation.x = -Math.PI / 2
+            sphereShadow.position.y = -0.49
+
+            scene.add(sphereShadow)
+
+
+            plane = new THREE.Mesh(
+                new THREE.PlaneGeometry(5, 5),
+                new THREE.MeshStandardMaterial()
+            )
+            plane.rotation.x = -Math.PI / 2
+            plane.position.y = -0.5
+            // plane.receiveShadow=true
+
+            scene.add(plane, sphere)
+
+            // lightShadowMap()
+
+            //相机
+            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 1, 1000)
+            camera.position.set(0, 5, 10)
+            camera.lookAt(scene.position)
+
+
+            //渲染器
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
+            renderer.setSize(sizes.width, sizes.height)
+            // renderer.setClearColor('lightsalmon', 0.5)
+            renderer.setPixelRatio(window.devicePixelRatio)
+            renderer.shadowMap.enabled = false
+            // 阴影算法PDF，radius无效
+            renderer.shadowMap.type = THREE.PCFShadowMap
+
+
+
+            //控制器
+            controls = new OrbitControls(camera, renderer.domElement)
+            controls.enableDamping = true
+
+            //帧率检测
+            stats = new Stats()
+            document.body.appendChild(stats.domElement)
+
+
+        }
+        // 自适应屏幕
+        let onWindowsResize = () => {
+
+            sizes.width = window.innerWidth
+            sizes.height = window.innerHeight
+            camera.aspect = sizes.width / sizes.height
+            camera.updateProjectionMatrix()
+            renderer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(window.devicePixelRatio)
+        }
+
+        //双击全屏
+        let onWindowsScreen = () => {
+            let isFullScreen = document.fullscreenElement
+            if (!isFullScreen) {
+                renderer.domElement.requestFullscreen()
+            } else {
+                document.exitFullscreen()
+            }
+        }
+
+
+        let expandFunction = () => {
+            window.addEventListener('resize', onWindowsResize)
+            window.addEventListener('dblclick', onWindowsScreen)
+
+        }
+
+
+
+        const clock = new THREE.Clock()
+        let animate = () => {
+
+            const elapsedTime = clock.getElapsedTime()
+            sphere.position.x = Math.cos(elapsedTime) * 2
+            sphere.position.z = Math.sin(elapsedTime) * 2
+            sphere.position.y = Math.abs(Math.sin(elapsedTime * 3))
+
+            sphereShadow.position.x = sphere.position.x
+            sphereShadow.position.z = sphere.position.z
+            sphereShadow.material.opacity = (1 - sphere.position.y) * 0.5
+
+            stats.update()
+            renderer.render(scene, camera)
+            requestAnimationFrame(animate)
+        }
+
+
+        init()
+        animate()
+        expandFunction()
+    </script>
+</body>
+
+</html>
