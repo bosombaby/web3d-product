@@ -20,11 +20,83 @@
 
 目前作品的相关`展示平台`已上线：[VR_Team作品展示平台](https://product.vrteam.top/)，欢迎大家查看。
 
-`项目开源地址`：[web3d-product](https://github.com/bosombaby/web3d-product)
+`项目开源地址`：[web3d-product](https://github.com/bosombaby/web3d-product)，下面为一部分的网页的作品展示。
 
-## 二、项目使用流程
 
-### 2.1 项目结构
+
+## 二、作品展示
+
+### 粒子特效
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302131959988.png" alt="4" style="zoom: 50%;" />
+
+
+
+`在线预览`：[粒子平面墙](https://product.vrteam.top/examples/particles/points_wall.html)
+
+
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302131959828.png" alt="1" style="zoom: 50%;" />
+
+`在线预览`：[迷失太空](https://product.vrteam.top/examples/particles/lost_in_space.html)
+
+
+
+
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302131959473.png" alt="2" style="zoom: 50%;" />
+
+
+
+`在线预览`：[粒子海浪](https://product.vrteam.top/examples/particles/particles_sea.html)
+
+
+
+
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302131959445.png" alt="3" style="zoom: 50%;" />
+
+
+
+`在线预览`：[银河系](https://product.vrteam.top/examples/particles/galaxy_generator.html)
+
+
+
+### 二维漫画
+
+
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302132003153.png" alt="5" style="zoom:50%;" />
+
+
+
+`在线预览`：[漫画-蜘蛛侠](https://product.vrteam.top/examples/comic/spider-man.html)
+
+
+
+### 可视化
+
+
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302132005539.png" alt="6" style="zoom: 50%;" />
+
+
+
+`在线预览`：[电脑主机拆解](https://product.vrteam.top/examples/visualization/computer_host.html)
+
+### 后期处理
+
+<img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302132006366.png" alt="7" style="zoom:50%;" />
+
+
+
+`在线预览`：[后期处理-虚幻花朵](https://product.vrteam.top/examples/processing/webgl_postprocessing_unreal_bloom.html)
+
+
+
+## 三、项目使用流程
+
+### 3.1 项目结构
 
 <img src="https://gitee.com/riskbaby/picgo/raw/master/blog/202302101913095.png" alt="11" style="zoom: 80%;" />
 
@@ -40,7 +112,7 @@
 - `src`
   - `views`：功能主界面
 
-### 2.2 基本使用
+### 3.2 基本使用
 
 ```js
 //安装依赖
@@ -49,7 +121,7 @@ npm i
 npm run dev
 ```
 
-### 2.3 项目模板
+### 3.3 项目模板
 
 
 
@@ -59,6 +131,6 @@ npm run dev
 
 该模板集成最简单的一个`three.js`环境，在此基础上可以自行搭建。
 
-### 2.4 技术栈
+### 3.4 技术栈
 
 `前端`：vue  +  three.js  +  js
