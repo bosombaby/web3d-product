@@ -241,7 +241,6 @@
                 ACESFilmic: THREE.ACESFilmicToneMapping
             })
             .onFinishChange(() => {
-                console.log(renderer.toneMapping);
                 updateAllMaterials()
             })
         floder3.add(renderer, 'toneMappingExposure').min(0).max(10).step(0.001)

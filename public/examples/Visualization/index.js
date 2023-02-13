@@ -135,7 +135,7 @@ const animate = function () {
   TWEEN.update();
   raycaster.setFromCamera(mouse, camera);
   const intersection = raycaster.intersectObjects( itemList );
-  if(intersection.length>0){
+  if(intersection.length>0){-
     // console.log("intersection",intersection);
     // 给选中的物体 设置outline效果
     outlinePass.selectedObjects = [intersection[0].object];

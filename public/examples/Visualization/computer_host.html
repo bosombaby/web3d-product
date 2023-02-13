@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Shortcut Icon" href="../assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../assets/style/normalize.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <!-- 拆解动画 -->
+    <style>
+        .btn-container{
+            position: absolute;
+			margin: auto;
+			width: 100vw;
+			display: flex;
+			justify-content: center;
+            z-index: 1;
+        }
+        .btn-container button{
+            
+            margin: 10px;
+            font-size: 20px;
+            background-color: #409eff;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .name-box{
+            display: none;
+            position: absolute;
+            top: 200px;
+            left: 0;
+            text-align: center;
+            width: 200px;
+            height: 100px;
+            border-radius: 50px;
+            line-height: 100px;
+            color: #fff;
+            font-size: large;
+            background-color: rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+        .loading-percent{
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            text-align: center;
+            width: 100px;
+            height: 50px;
+            color: #fff;
+            line-height: 50px;
+            font-size: large;
+            z-index: 100;
+        }
+    </style>
+    <title>电脑主机拆解</title>
+
+</head>
+
+<body>
+
+    <!--    
+    time:2023/1/25
+    author:bosom
+    details: 模型拆解案例，参考资料：https://alwxkxk.github.io/threejs-example/
+-->
+
+    <script type="importmap">
+        {
+            "imports":{
+                "three":"../assets/js/three/build/three.module.js",
+                "three/examples/jsm/":"../assets/js/three/jsm/"
+            }
+        }
+    </script>
+    
+
+    <div class="btn-container">
+        <button class="disassemble">拆解</button>
+        <button class="recovery">还原</button>
+    </div>
+    <div class="loading-percent"></div>
+    <div class="name-box">
+        
+    </div>
+    <canvas class="webgl"></canvas>
+
+    <script type="module">
+        import * as THREE from 'three'
+        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+        import Stats from 'three/examples/jsm/libs/stats.module.js'
+        import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+        //后期处理
+        import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+        import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+        import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
+
+        let canvas
+        let scene, camera, renderer
+        let stats, controls
+        let effectComposer = null
+
+        //像素比
+        const sizes = {
+            width: window.innerWidth,
+            height: window.innerHeight
+        }
+
+        //网址 https://github.com/tweenjs/tween.js
+        let move = (obj, coord) => {
+            new TWEEN.Tween(obj.position)
+                .to(coord, 1000)
+                .easing(TWEEN.Easing.Quadratic.Out)
+                .onUpdate((coord) => {
+                    obj.position.set(coord.x || 0, coord.y || 0, coord.z || 0)
+                })
+                .start()
+        }
+
+        // 拆解按钮
+        document.querySelector(".disassemble").onclick = () => {
+            move(scene.getObjectByName("Object_7"), { x: -2.5, y: 1 })
+            move(scene.getObjectByName("Object_18"), { x: -5, y: -1 })
+
+            move(scene.getObjectByName("Object_10"), { x: 5 })
+            move(scene.getObjectByName("Object_11"), { x: 2.5 })
+
+            move(scene.getObjectByName("Object_17"), { x: 2.5 })
+
+            move(scene.getObjectByName("Object_27"), { z: 2.5 })
+            move(scene.getObjectByName("Object_29"), { z: 2.5 })
+
+            move(scene.getObjectByName("Object_12"), { x: -5 })
+            move(scene.getObjectByName("Object_14"), { z: -5 })
+            move(scene.getObjectByName("Object_16"), { z: -5 })
+
+        };
+
+        // 还原按钮
+        document.querySelector(".recovery").onclick = () => {
+            move(scene.getObjectByName("Object_7"), { x: 0, y: 0 })
+            move(scene.getObjectByName("Object_18"), { x: 0, y: 0 })
+
+            move(scene.getObjectByName("Object_10"), { x: 0 })
+            move(scene.getObjectByName("Object_11"), { x: 0 })
+            move(scene.getObjectByName("Object_17"), { x: 0 })
+            move(scene.getObjectByName("Object_27"), { z: 0 })
+            move(scene.getObjectByName("Object_29"), { z: 0 })
+
+            move(scene.getObjectByName("Object_12"), { x: 0 })
+            move(scene.getObjectByName("Object_14"), { z: 0 })
+            move(scene.getObjectByName("Object_16"), { z: 0 })
+        };
+        //初始化操作
+        let init = () => {
+            // 获取dom元素
+            canvas = document.querySelector('.webgl')
+
+            // 场景初始化
+            scene = new THREE.Scene()
+
+            const axisHelper = new THREE.AxesHelper(10)
+            scene.add(axisHelper)
+
+            const textureLoader=new THREE.TextureLoader()
+            const environmentMap= textureLoader.load('../assets/img/background/computer_host.webp')
+            scene.background= environmentMap
+            scene.environment=environmentMap
+
+
+            // 添加环境光
+            const light = new THREE.AmbientLight(0xdeedff, 1.5)
+            scene.add(light)
+
+            const spotLight1 = new THREE.SpotLight(0xffffff)
+            spotLight1.position.set(0, 15, 0)
+            spotLight1.angle = 0.6
+            scene.add(spotLight1)
+
+            const spotLight2 = new THREE.SpotLight(0xffffff)
+            spotLight2.position.set(-1, 3, 10)
+            spotLight2.angle = 0.5
+            scene.add(spotLight2)
+
+            const spotLight3 = new THREE.SpotLight(0xffffff)
+            spotLight3.position.set(-6, 9, -1)
+            spotLight3.angle = 1.3
+            scene.add(spotLight3)
+
+            //相机
+            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height)
+            camera.position.set(-15, 5, 15)
+
+
+            //渲染器
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
+            renderer.setSize(sizes.width, sizes.height)
+            
+            renderer.setPixelRatio(window.devicePixelRatio)
+
+            //控制器
+            controls = new OrbitControls(camera, renderer.domElement)
+            controls.enableDamping = true
+
+            //帧率检测
+            stats = new Stats()
+            document.body.appendChild(stats.domElement)
+
+
+        }
+        // 自适应屏幕
+        let onWindowsResize = () => {
+
+            sizes.width = window.innerWidth
+            sizes.height = window.innerHeight
+            camera.aspect = sizes.width / sizes.height
+            camera.updateProjectionMatrix()
+            renderer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(window.devicePixelRatio)
+
+            effectComposer.setPixelRatio(window.devicePixelRatio)
+            effectComposer.setSize(sizes.width, sizes.height)
+        }
+
+        //双击全屏
+        let onWindowsScreen = () => {
+            let isFullScreen = document.fullscreenElement
+            if (!isFullScreen) {
+                renderer.domElement.requestFullscreen()
+            } else {
+                document.exitFullscreen()
+            }
+        }
+
+
+        let expandFunction = () => {
+            window.addEventListener('resize', onWindowsResize)
+            window.addEventListener('dblclick', onWindowsScreen)
+
+        }
+
+        // 模型加载管理器
+        const manager = new THREE.LoadingManager()
+        const loadingDom = document.querySelector('.loading-percent')
+        let addLoadingManager = () => {
+            manager.onStart = () => {
+                loadingDom.style.display = 'block'
+                console.log('开始加载!');
+            }
+            manager.onProgress = (url, itemsLoaded, itemsTotal) => {
+                const percent = (itemsLoaded / itemsTotal) * 100
+                loadingDom.innerHTML = `进度:${percent}%`
+                console.log(`进度:${percent}%`);
+            }
+            manager.onLoad = () => {
+                loadingDom.style.display = 'none'
+                console.log('加载完成!');
+            }
+            manager.onError = () => {
+                console.log('加载出错!');
+            }
+        }
+
+
+        // 存放模型
+        let modelPart = []
+        const gltfLoader = new GLTFLoader(manager)
+        let importModel = () => {
+            gltfLoader.load('../assets/models/gltf/电脑主机.glb', (gltf) => {
+                const model = gltf.scene
+                scene.add(model)
+                model.traverse(child => {
+                    if (child instanceof THREE.Mesh) {
+                        modelPart.push(child)
+                    }
+                })
+                animate()
+            })
+        }
+
+
+        // 选中物体
+        let namePosition = {
+            x: 0,
+            y: 0
+        }
+        const nameBox = document.querySelector('.name-box')
+        let currentIntersect = null
+        const raycaster = new THREE.Raycaster()
+        const mouse = new THREE.Vector2()
+        let raycastCamera = () => {
+            window.addEventListener('mousemove', (event) => {
+                event.preventDefault()
+                namePosition.x = event.clientX
+                namePosition.y = event.clientY
+                mouse.x = (event.clientX / sizes.width) * 2 - 1
+                mouse.y = -(event.clientY / sizes.height) * 2 + 1
+            })
+        }
+
+        // 增加后期处理
+        let outlinePass
+        let addPostProcessing = () => {
+            effectComposer = new EffectComposer(renderer)
+            effectComposer.setPixelRatio(window.devicePixelRatio)
+            effectComposer.setSize(sizes.width, sizes.height)
+
+            const renderPass = new RenderPass(scene, camera)
+            effectComposer.addPass(renderPass)
+
+            outlinePass = new OutlinePass(new THREE.Vector2(sizes.width, sizes.height), scene, camera)
+            outlinePass.edgeStrength = 5
+            outlinePass.edgeGlow = 1
+            outlinePass.pulsePeriod = 2
+            outlinePass.visibleEdgeColor.set("#35f2d1")
+            outlinePass.hiddenEdgeColor.set("#00ffff")
+            effectComposer.addPass(outlinePass)
+        }
+        let animate = () => {
+
+            stats.update()
+            TWEEN.update()
+
+            raycaster.setFromCamera(mouse, camera)
+            const intersects = raycaster.intersectObjects(modelPart)
+            if (intersects.length > 0) {
+
+                nameBox.style.display = 'block'
+                nameBox.innerHTML = `电脑主机部件${intersects[0].object.name.split('_')[1]}`
+                nameBox.style.top = `${namePosition.y}px`
+                nameBox.style.left = `${namePosition.x + 30}px`
+                outlinePass.selectedObjects = [intersects[0].object]
+
+            } else {
+                nameBox.style.display = 'none'
+                outlinePass.selectedObjects = []
+            }
+
+            // renderer.render(scene,camera)
+            effectComposer.render()
+            requestAnimationFrame(animate)
+        }
+        init()
+        addPostProcessing()
+        addLoadingManager()
+        importModel()
+        raycastCamera()
+        expandFunction()
+    </script>
+</body>
+
+</html>
