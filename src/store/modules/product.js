@@ -5,14 +5,14 @@ const useProductStore = defineStore('product', {
         return {
             mainList: [
                 { title: '最新作品', single: true },
-                { title: '粒子海浪', link: 'examples/Particles/particles_sea.html', author: '' },
-                { title: '银河系', link: 'examples/Particles/galaxy_generator.html', author: '' },
-
+                { title: '粒子海浪', link: 'examples/particles/particles_sea.html', author: '' },
+                { title: '银河系', link: 'examples/particles/galaxy_generator.html', author: '' },
+                { title: '漫画-蜘蛛侠', link: 'examples/comic/spider-man.html', author: '' },
 
                 { title: '热门作品', single: true },
-                { title: '银河系', link: 'examples/Particles/galaxy_generator.html', author: '' },
-                { title: '虚幻花朵', link: 'examples/Processing/webgl_postprocessing_unreal_bloom.html', author: '' },
-                { title: '迷失太空', link: 'examples/Particles/lost_in_space.html', author: '' },
+                { title: '银河系', link: 'examples/particles/galaxy_generator.html', author: '' },
+                { title: '虚幻花朵', link: 'examples/processing/webgl_postprocessing_unreal_bloom.html', author: '' },
+                { title: '迷失太空', link: 'examples/particles/lost_in_space.html', author: '' },
 
 
                 { title: '入门案例', single: true },
