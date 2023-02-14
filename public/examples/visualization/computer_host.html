@@ -293,7 +293,7 @@
         const nameBox = document.querySelector('.name-box')
         let currentIntersect = null
         const raycaster = new THREE.Raycaster()
-        const mouse = new THREE.Vector2()
+        const mouse = new THREE.Vector2(5,5)
         let raycastCamera = () => {
             window.addEventListener('mousemove', (event) => {
                 event.preventDefault()
