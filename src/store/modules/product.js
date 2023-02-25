@@ -5,8 +5,8 @@ const useProductStore = defineStore('product', {
         return {
             mainList: [
                 { title: '最新作品', single: true },
-                { title: '粒子海浪', link: 'examples/particles/particles_sea.html', author: '' },
-                { title: '银河系', link: 'examples/particles/galaxy_generator.html', author: '' },
+                { title: '圆点介绍', link: 'examples/mixed_html/point_info_show.html', author: '' },
+                { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '' },
                 { title: '漫画-蜘蛛侠', link: 'examples/comic/spider-man.html', author: '' },
 
                 { title: '热门作品', single: true },
@@ -37,10 +37,12 @@ const useProductStore = defineStore('product', {
 
                 {title:'融合前端HTML',single:true},
                 { title: '页面滚动', link: 'examples/mixed_html/scroll_page.html', author: '' },
+                { title: '圆点介绍', link: 'examples/mixed_html/point_info_show.html', author: '' },
 
 
                 {title:'3d可视化',single:true},
                 { title: '电脑主机拆解', link: 'examples/visualization/computer_host.html', author: '' },
+                { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '' },
                 
 
                 {title:'后期处理',single:true},
