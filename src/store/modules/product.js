@@ -4,6 +4,11 @@ const useProductStore = defineStore('product', {
     state: () => {
         return {
             mainList: [
+                { title: '团队作品', single: true },
+                { title: '新圩港-2D', link: 'http://101.132.190.14/xinwei/2d/', author: '' },
+                { title: '新圩港-3D', link: 'http://101.132.190.14/xinwei/3d/', author: '' },
+
+                
                 { title: '最新作品', single: true },
                 { title: '圆点介绍', link: 'examples/mixed_html/point_info_show.html', author: '' },
                 { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '' },
