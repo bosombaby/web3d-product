@@ -83,8 +83,6 @@ let init = () => {
     ]
     // 遍历单个模型
     models.forEach(element => {
-
-        console.log(element);
         // 单个场景
         const scene = new THREE.Scene()
         const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 100)
