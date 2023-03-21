@@ -20,7 +20,7 @@
         }
     </script>
 
-    
+
     <script type="module">
         import * as THREE from 'three'
         import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -37,7 +37,7 @@
 
             //坐标轴
             let axisHelper = new THREE.AxesHelper(1500)
-            scene.add(axisHelper)
+            // scene.add(axisHelper)
 
             //导航网格
             let gridHelper = new THREE.GridHelper(1000, 2000)
@@ -48,7 +48,7 @@
             let texture = new THREE.TextureLoader().load('../assets/textures/crate.png')
             let material = new THREE.MeshBasicMaterial({ map: texture })
             let cube = new THREE.Mesh(geometry, material)
-            cube.rotation.x=Math.PI/9
+            cube.rotation.x = Math.PI / 9
             scene.add(cube)
 
             //灯光

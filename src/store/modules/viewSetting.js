@@ -10,7 +10,10 @@ const useSettingStore = defineStore('setting', {
                 },
                 obj: {
                     roughness: 0.5,
-                    metalness: 0, 
+                    metalness: 0,
+                    wireframe: false,
+                    type: 'default',
+                    choice: ['default', 'solid', 'wireframe']
                 },
 
             }

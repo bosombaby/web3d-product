@@ -14,12 +14,12 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver()],
     }),
-    
+
   ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src/'),
-      '*':path.resolve('')
+      '*': path.resolve('')
     }
   }
 })
