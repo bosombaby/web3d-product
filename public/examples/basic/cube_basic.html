@@ -50,7 +50,7 @@
 
             //创建物体
             let geometry = new THREE.BoxGeometry(100, 100, 100)
-            let texture = new THREE.TextureLoader().load('../assets/textures/crate.png')
+            let texture = new THREE.TextureLoader().load('../assets/textures/other/crate.png')
             let material = new THREE.MeshBasicMaterial({ map: texture })
             let cube = new THREE.Mesh(geometry, material)
             cube.rotation.x = Math.PI / 9
