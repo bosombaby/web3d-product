@@ -30,7 +30,7 @@
 
         <div class="back-home">
             <a href="http://101.132.190.14/" target="_blank">
-                <img src="examples/assets/img/backhome/home.svg" alt="">
+                <img src="../assets/img/svg/home.svg" alt="">
                 <span>回到主页</span>
             </a>
         </div>
