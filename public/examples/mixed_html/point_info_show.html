@@ -8,15 +8,13 @@
     <link rel="Shortcut Icon" href="../assets/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="../assets/style/normalize.css">
     <style>
-        .point
-        {
+        .point {
             position: absolute;
             top: 50%;
             left: 50%;
         }
 
-        .point .label
-        {
+        .point .label {
             position: absolute;
             top: -20px;
             left: -20px;
@@ -32,14 +30,15 @@
             font-weight: 100;
             font-size: 14px;
             cursor: pointer;
-            transform: scale(0,0);
+            transform: scale(0, 0);
             transition: transform 0.3s;
         }
-        .point.visible .label{
-            transform: scale(1,1);
+
+        .point.visible .label {
+            transform: scale(1, 1);
         }
-        .point .text
-        {
+
+        .point .text {
             position: absolute;
             top: 30px;
             left: -120px;
@@ -57,11 +56,10 @@
             transition: opacity 0.3s;
             pointer-events: none;
         }
-        .point:hover .text
-        {
+
+        .point:hover .text {
             opacity: 1;
         }
-
     </style>
     <title>圆点信息展示</title>
 </head>
@@ -83,7 +81,12 @@
         }
     </script>
     <canvas class="webgl"></canvas>
-
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
     <div class="point point-0">
         <div class="label">1</div>
         <div class="text">测试</div>

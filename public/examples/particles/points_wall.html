@@ -27,10 +27,15 @@
         }
     </script>
     <canvas class="webgl"></canvas>
-
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
 
     <script type="module">
-    
+
         import * as THREE from 'three'
         import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
         import Stats from 'three/examples/jsm/libs/stats.module.js'
@@ -55,8 +60,8 @@
             color: 0xffffff,
             // 顶点着色
             vertexColors: true,
-            autoRotate:true,
-            autoRotateSpeed:5
+            autoRotate: true,
+            autoRotateSpeed: 5
         }
 
 
@@ -152,15 +157,15 @@
             gui.add(params, 'opacity', 0, 1, 0.1).onChange(drawNewPoint)
             gui.add(params, 'vertexColors').onChange(drawNewPoint)
             gui.add(params, 'autoRotate')
-            gui.add(params, 'autoRotateSpeed',1,20)
+            gui.add(params, 'autoRotateSpeed', 1, 20)
 
 
             //控制器
             controls = new OrbitControls(camera, renderer.domElement)
             controls.enableDamping = true
             controls.autoRotate = params.autoRotate
-            controls.autoRotateSpeed =params.autoRotateSpeed
-            
+            controls.autoRotateSpeed = params.autoRotateSpeed
+
 
             //帧率检测
             stats = new Stats()

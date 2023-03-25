@@ -12,7 +12,8 @@
             font-family: space;
             src: url('../assets/fonts/particles.ttf');
         }
-        .space-info{
+
+        .space-info {
             position: fixed;
             width: 100%;
             bottom: 24px;
@@ -21,7 +22,8 @@
             display: none;
             font-size: 14px;
         }
-        .space-info .title{
+
+        .space-info .title {
             font-size: 2.5rem;
             color: rgba(255, 255, 255, 1);
             text-align: center;
@@ -30,7 +32,8 @@
             margin-bottom: 24px;
             text-shadow: 1px 1px 1px #fffc00, 0px 2px 2px #fffc00, 0px 4px 8px #fffc00;
         }
-        .space-info .details{
+
+        .space-info .details {
             font-size: 1.5rem;
             color: rgba(255, 255, 255, 1);
             text-align: center;
@@ -57,13 +60,18 @@
             }
         }
     </script>
-    
+
     <canvas class="webgl"></canvas>
     <div class="space-info">
         <h1 class="title">LOST IN SPACE</h1>
         <h2 class="details">迷失太空</h2>
     </div>
-
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
     <script type="module">
         import * as THREE from 'three'
         import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -245,15 +253,15 @@
         }
 
         window.addEventListener('mousemove', e => {
-                const cx = window.innerWidth / 2;
-                const cy = window.innerHeight / 2;
-                const dx = -1 * ((cx - e.clientX) / cx);
-                const dy = -1 * ((cy - e.clientY) / cy);
-                camera.position.x = dx * 5;
-                camera.position.y = dy * 5;
-                astronaut.position.x = dx * 5;
-                astronaut.position.y = dy * 5;
-            })
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            const dx = -1 * ((cx - e.clientX) / cx);
+            const dy = -1 * ((cy - e.clientY) / cy);
+            camera.position.x = dx * 5;
+            camera.position.y = dy * 5;
+            astronaut.position.x = dx * 5;
+            astronaut.position.y = dy * 5;
+        })
 
         let animate = () => {
 

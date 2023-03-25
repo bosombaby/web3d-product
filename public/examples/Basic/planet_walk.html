@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,9 +9,10 @@
     <link rel="stylesheet" href="../assets/style/normalize.css">
     <title>星球漫游</title>
 </head>
+
 <body>
 
-<!--    
+    <!--    
     time:2023/1/25
     author:bosom
     details: 进阶案例
@@ -25,6 +27,12 @@
         }
     </script>
     <canvas class="webgl"></canvas>
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
     <script type="module">
         import * as THREE from 'three'
         import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -34,27 +42,27 @@
         let canvas
         let scene, camera, renderer
         let stats, controls
-        let planet,ring,satellite,stars
+        let planet, ring, satellite, stars
 
         //像素比
         const sizes = {
             width: window.innerWidth,
-            height:window.innerHeight
+            height: window.innerHeight
         }
 
 
         //初始化场景的物体
         let initObj = () => {
-            
+
             //地球
             const shpereGeometry = new THREE.SphereGeometry(80, 32, 32)
             const shpereMaterial = new THREE.MeshLambertMaterial({
                 color: 0x03c03c,
-                wireframe:true
+                wireframe: true
             })
-            planet =new THREE.Mesh(shpereGeometry,shpereMaterial)
+            planet = new THREE.Mesh(shpereGeometry, shpereMaterial)
             scene.add(planet)
-            
+
             //圆环
             const torusGeometry = new THREE.TorusGeometry(150, 8, 2, 120)
             const torusMaterial = new THREE.MeshLambertMaterial({
@@ -63,22 +71,22 @@
             })
             ring = new THREE.Mesh(torusGeometry, torusMaterial)
             ring.rotation.x = Math.PI / 2
-            ring.rotation.y=-0.1*(Math.PI / 2)
+            ring.rotation.y = -0.1 * (Math.PI / 2)
             scene.add(ring)
-            
+
             //卫星
             const iconGeometry = new THREE.IcosahedronGeometry(16, 0)
             const iconMaterial = new THREE.MeshLambertMaterial({
-                color:0xfffc00
+                color: 0xfffc00
             })
             satellite = new THREE.Mesh(iconGeometry, iconMaterial)
-            satellite.position.x=220
+            satellite.position.x = 220
             scene.add(satellite)
 
             ///星星
             stars = new THREE.Group()
-            
-            for (let i = 0;i< 500; i++){
+
+            for (let i = 0; i < 500; i++) {
                 const geometry = new THREE.IcosahedronGeometry(Math.random() * 2, 0)
                 const material = new THREE.MeshToonMaterial({ color: 0xeeeeee })
                 const mesh = new THREE.Mesh(geometry, material)
@@ -98,13 +106,13 @@
 
 
         //初始化操作
-        let init= ()=> {
+        let init = () => {
             // 获取dom元素
             canvas = document.querySelector('.webgl')
-            
+
             // 场景初始化
             scene = new THREE.Scene()
-            scene.background=new THREE.Color(0x1A1A1A)
+            scene.background = new THREE.Color(0x1A1A1A)
             scene.fog = new THREE.Fog(0x1A1A1A, 1, 1000)
 
             // 添加环境光
@@ -118,21 +126,21 @@
             camera.position.set(20, 100, 450)
             camera.lookAt(scene.position)
 
-            
+
             //渲染器
-            renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true})
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
             renderer.setSize(sizes.width, sizes.height)
             renderer.setPixelRatio(window.devicePixelRatio)
 
 
             //控制器
-            controls=new OrbitControls(camera,renderer.domElement)
-            controls.enableDamping=true
+            controls = new OrbitControls(camera, renderer.domElement)
+            controls.enableDamping = true
 
             //帧率检测
             stats = new Stats()
             document.body.appendChild(stats.domElement)
-            
+
 
         }
         // 自适应屏幕
@@ -140,9 +148,9 @@
 
             sizes.width = window.innerWidth
             sizes.height = window.innerHeight
-            camera.aspect = sizes.width/sizes.height
+            camera.aspect = sizes.width / sizes.height
             camera.updateProjectionMatrix()
-            renderer.setSize(sizes.width,sizes.height)
+            renderer.setSize(sizes.width, sizes.height)
             renderer.setPixelRatio(window.devicePixelRatio)
         }
 
@@ -162,17 +170,17 @@
             window.addEventListener('dblclick', onWindowsScreen)
 
         }
-            
+
 
         //渲染函数
         let render = () => {
 
             renderer.render(scene, camera)
-            
+
             // 星球动画
             planet.rotation.y += 0.005
             // 圆环动画
-            ring.rotation.z+=0.005
+            ring.rotation.z += 0.005
             //星星动画
             stars.rotation.y += 0.0009
             stars.rotation.z -= 0.0003
@@ -197,4 +205,5 @@
         expandFunction()
     </script>
 </body>
+
 </html>

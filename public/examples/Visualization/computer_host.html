@@ -10,16 +10,17 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
     <!-- 拆解动画 -->
     <style>
-        .btn-container{
+        .btn-container {
             position: absolute;
-			margin: auto;
-			width: 100vw;
-			display: flex;
-			justify-content: center;
+            margin: auto;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
             z-index: 1;
         }
-        .btn-container button{
-            
+
+        .btn-container button {
+
             margin: 10px;
             font-size: 20px;
             background-color: #409eff;
@@ -29,7 +30,8 @@
             border-radius: 10px;
             cursor: pointer;
         }
-        .name-box{
+
+        .name-box {
             display: none;
             position: absolute;
             top: 200px;
@@ -41,10 +43,11 @@
             line-height: 100px;
             color: #fff;
             font-size: large;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0, 0, 0, 0.4);
             z-index: 100;
         }
-        .loading-percent{
+
+        .loading-percent {
             display: none;
             position: absolute;
             top: 0;
@@ -78,7 +81,7 @@
             }
         }
     </script>
-    
+
 
     <div class="btn-container">
         <button class="disassemble">拆解</button>
@@ -86,10 +89,15 @@
     </div>
     <div class="loading-percent"></div>
     <div class="name-box">
-        
+
     </div>
     <canvas class="webgl"></canvas>
-
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
     <script type="module">
         import * as THREE from 'three'
         import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -168,10 +176,10 @@
             const axisHelper = new THREE.AxesHelper(10)
             scene.add(axisHelper)
 
-            const textureLoader=new THREE.TextureLoader()
-            const environmentMap= textureLoader.load('../assets/img/background/computer_host.webp')
-            scene.background= environmentMap
-            scene.environment=environmentMap
+            const textureLoader = new THREE.TextureLoader()
+            const environmentMap = textureLoader.load('../assets/img/background/computer_host.webp')
+            scene.background = environmentMap
+            scene.environment = environmentMap
 
 
             // 添加环境光
@@ -201,7 +209,7 @@
             //渲染器
             renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
             renderer.setSize(sizes.width, sizes.height)
-            
+
             renderer.setPixelRatio(window.devicePixelRatio)
 
             //控制器
@@ -293,7 +301,7 @@
         const nameBox = document.querySelector('.name-box')
         let currentIntersect = null
         const raycaster = new THREE.Raycaster()
-        const mouse = new THREE.Vector2(5,5)
+        const mouse = new THREE.Vector2(5, 5)
         let raycastCamera = () => {
             window.addEventListener('mousemove', (event) => {
                 event.preventDefault()

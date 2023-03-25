@@ -50,9 +50,19 @@ const useProductStore = defineStore('product', {
                 { title: '电脑主机拆解', link: 'examples/visualization/computer_host.html', author: '', photo_url: 'textures/电脑主机拆解.png' },
                 { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '', photo_url: 'textures/机房监测.png' },
 
+                { title: '着色器', single: true },
+                { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '', photo_url: 'textures/机房监测.png' },
+
 
                 { title: '后期处理', single: true },
                 { title: '虚幻花朵', link: 'examples/processing/webgl_postprocessing_unreal_bloom.html', author: '', photo_url: 'textures/虚幻花朵.png' },
+
+
+                { title: '项目总结', single: true },
+                { title: '鬼屋', link: 'examples/project/haunted_house.html', author: '', photo_url: 'textures/鬼屋.png' },
+
+
+
             ]
         }
     }

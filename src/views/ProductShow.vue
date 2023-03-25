@@ -26,6 +26,14 @@
         <div class="back-top" @click="backTop">
             <img src="../assets/img/rocket.png" alt="">
         </div>
+
+
+        <div class="back-home">
+            <a href="http://101.132.190.14/" target="_blank">
+                <img src="examples/assets/img/backhome/home.svg" alt="">
+                <span>回到主页</span>
+            </a>
+        </div>
     </div>
 </template>
 
@@ -435,6 +443,49 @@ onMounted(() => {
     }
 }
 
+.back-home {
+    width: 80px;
+    height: 75px;
+    position: fixed;
+    left: 0;
+    bottom: 1px;
+    z-index: 1;
+    cursor: pointer;
+
+    a {
+        display: inline-block;
+        width: 80px;
+        height: 75px;
+        text-align: center;
+        text-decoration: none;
+
+        img {
+            width: 100%;
+            height: 50px;
+        }
+
+        span {
+            width: 100%;
+            height: 25px;
+            line-height: 25px;
+        }
+    }
+}
+
+.back-home:hover {
+    background-color: #6f73ef;
+    border: 1px solid #fff;
+}
+
+a {
+    background-color: transparent;
+    text-decoration: none;
+    color: rgb(23, 174, 234);
+}
+
+a:hover {
+    color: rgb(236, 75, 236);
+}
 
 @media (max-width: 1370px) {
     .container {

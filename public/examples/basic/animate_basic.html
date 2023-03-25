@@ -27,8 +27,14 @@
             }
         }
     </script>
-    <canvas class="webgl"></canvas>
 
+    <canvas class="webgl"></canvas>
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+
+        </a>
+    </div>
 
 
     <script type="module">
@@ -40,7 +46,7 @@
         let canvas
         let scene, camera, renderer
         let stats, controls
-        let cube,clock
+        let cube, clock
 
         //像素比
         const sizes = {
@@ -52,7 +58,7 @@
         let init = () => {
 
             // 时钟开始
-            clock=new THREE.Clock()
+            clock = new THREE.Clock()
 
             // 获取dom元素
             canvas = document.querySelector('.webgl')
@@ -61,7 +67,7 @@
             scene = new THREE.Scene()
 
 
-            const axesHelper=new THREE.AxesHelper(10)
+            const axesHelper = new THREE.AxesHelper(10)
             scene.add(axesHelper)
 
             // 添加环境光
@@ -69,15 +75,15 @@
             scene.add(light)
 
 
-            const geometry=new THREE.BoxGeometry(1,1,1)
-            const material=new THREE.MeshBasicMaterial({
-                color:'red'
+            const geometry = new THREE.BoxGeometry(1, 1, 1)
+            const material = new THREE.MeshBasicMaterial({
+                color: 'red'
             })
-            cube=new THREE.Mesh(geometry,material)
+            cube = new THREE.Mesh(geometry, material)
             scene.add(cube)
             //相机
-            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height,1,1000)
-            camera.position.set(0,2,5)
+            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 1, 1000)
+            camera.position.set(0, 2, 5)
             camera.lookAt(scene.position)
 
 
@@ -129,16 +135,16 @@
         }
 
         // 时间动画
-        let clockAnimate=()=>{
-            const elapsedTime=clock.getElapsedTime()
+        let clockAnimate = () => {
+            const elapsedTime = clock.getElapsedTime()
 
             cube.position.x = Math.cos(elapsedTime)
-            cube.position.y=Math.sin(elapsedTime)
+            cube.position.y = Math.sin(elapsedTime)
         }
 
         // gasp动画
-        let gsapAnimate=()=>{
-            gsap.to(cube.position, { x: 5, duration: 3, delay:1})
+        let gsapAnimate = () => {
+            gsap.to(cube.position, { x: 5, duration: 3, delay: 1 })
         }
 
         let animate = () => {

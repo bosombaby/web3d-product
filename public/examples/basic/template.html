@@ -27,8 +27,12 @@
         }
     </script>
     <canvas class="webgl"></canvas>
-
-
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
 
     <script type="module">
         import * as THREE from 'three'
@@ -38,7 +42,7 @@
 
         let canvas
         let scene, camera, renderer
-        let stats, controls,gui
+        let stats, controls, gui
 
         //像素比
         const sizes = {
@@ -54,22 +58,22 @@
             // 场景初始化
             scene = new THREE.Scene()
 
-            
+
             //坐标轴
             const axesHelper = new THREE.AxesHelper(10)
             scene.add(axesHelper)
 
             //导航网格
-            const gridHelper=new THREE.GridHelper(10,10)
+            const gridHelper = new THREE.GridHelper(10, 10)
             scene.add(gridHelper)
-            
+
             // 添加环境光
             const light = new THREE.AmbientLight(0xdeedff, 0.8)
             scene.add(light)
 
             //相机
-            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height,1,1000)
-            camera.position.set(0,3,10)
+            camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 1, 1000)
+            camera.position.set(0, 3, 10)
             camera.lookAt(scene.position)
 
 

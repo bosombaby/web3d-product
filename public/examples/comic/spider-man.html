@@ -27,7 +27,12 @@
         }
     </script>
     <canvas class="webgl"></canvas>
-
+    <div class="back-home">
+        <a href="http://101.132.190.14/" target="_blank">
+            <img src="../assets/img/backhome/home.svg" alt="">
+            <span>回到主页</span>
+        </a>
+    </div>
 
 
     <script type="module">
@@ -71,7 +76,7 @@
 
             //相机
             camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 1, 1000)
-            camera.position.set(-20, 0,0)
+            camera.position.set(-20, 0, 0)
             camera.lookAt(scene.position)
 
 
