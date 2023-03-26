@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="Shortcut Icon" href="../assets/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="../assets/style/normalize.css">
-    <title>着色器基础入门</title>
+    <title>着色器基础进阶</title>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     <!--    
     time:2023/3/26
     author:bosom
-    details: 学习着色器attribute、varying插值等基础语法
+    details: 学习着色器uniforms
 -->
 
     <script type="importmap">
@@ -42,9 +42,6 @@
         import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js'
 
         // 导入着色器
-
-
-
         let canvas
         let scene, camera, renderer
         let stats, controls, gui
@@ -120,16 +117,16 @@
         uniform mat4 projectionMatrix;
         uniform mat4 viewMatrix;
         uniform mat4 modelMatrix;
+        uniform vec2 uFrequency;
+        uniform float uTime;
 
         attribute vec3 position;
-        attribute float aRandom;
-        varying float vRandom;
-
         void main()
         {
             vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-            modelPosition.z += aRandom * 0.8;
-            vRandom = aRandom;
+            modelPosition.z += sin(modelPosition.x + uFrequency.x - uTime) * 0.8;
+            modelPosition.z += sin(modelPosition.y + uFrequency.y - uTime) * 0.8;
+
 
             vec4 viewPosition = viewMatrix * modelPosition;
 
@@ -141,11 +138,11 @@
         `
         const fragmentShader = `
         precision mediump float;
-        varying float vRandom;
 
+        uniform vec3 uColor;
         void main()
         {
-            gl_FragColor = vec4(0.5, vRandom, 1.0, 1.0);
+            gl_FragColor = vec4(uColor, 1.0);
         }
         `
 
@@ -153,33 +150,44 @@
         let plane
         let createBasicShader = () => {
 
-            const geometry = new THREE.PlaneGeometry(5, 5, 32, 32)
+            const geometry = new THREE.PlaneGeometry(8, 3, 32, 32)
             const material = new THREE.RawShaderMaterial({
                 vertexShader: vertexShader,
                 fragmentShader: fragmentShader,
+                uniforms: {
+                    uFrequency: {
+                        value: new THREE.Vector2(5, 2),
+                    },
+                    uTime: { value: 0 },
+                    uColor: { value: new THREE.Color('skyblue') }
+                },
                 wireframe: false,
                 side: THREE.DoubleSide,
                 transparent: true
             })
 
-            //测试attribute属性
-            let aRandom = []
-            const count = geometry.attributes.position.count
-            for (let i = 0; i < count; i++) {
-                aRandom.push(Math.random())
-            }
-            geometry.setAttribute('aRandom', new THREE.Float32BufferAttribute(aRandom, 1))
 
 
             plane = new THREE.Mesh(geometry, material)
             scene.add(plane)
         }
 
+
+        const strength = { value: 1 }
         let debugGui = () => {
             gui = new GUI()
-            gui.add(plane.material, 'wireframe')
+            gui.add(plane.material.uniforms.uFrequency.value, 'x', 0, 20, 0.001).name('水平')
+            gui.add(plane.material.uniforms.uFrequency.value, 'y', 0, 20, 0.001).name('垂直')
+            gui.add(strength, 'value', 1, 10, 0.001).name('强度')
+
+            gui.addColor(plane.material.uniforms.uColor, 'value').name('颜色')
         }
+
+        const clock = new THREE.Clock()
         let animate = () => {
+
+            const elapsedTime = clock.getElapsedTime()
+            plane.material.uniforms.uTime.value = elapsedTime * strength.value
 
             stats.update()
             renderer.render(scene, camera)

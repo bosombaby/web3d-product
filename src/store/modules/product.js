@@ -51,7 +51,9 @@ const useProductStore = defineStore('product', {
                 { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '', photo_url: 'textures/机房监测.png' },
 
                 { title: '着色器', single: true },
-                { title: '机房监测', link: 'examples/visualization/machine_room.html', author: '', photo_url: 'textures/机房监测.png' },
+                { title: '入门', link: 'examples/shader/shader_basic.html', author: '', photo_url: 'textures/着色器入门.png' },
+                { title: '进阶', link: 'examples/shader/shader_advance.html', author: '', photo_url: 'textures/着色器进阶.png' },
+                { title: '中国国旗', link: 'examples/shader/shader_national_flag.html', author: '', photo_url: 'textures/中国国旗.png' },
 
 
                 { title: '后期处理', single: true },
