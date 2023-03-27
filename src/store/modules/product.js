@@ -57,6 +57,7 @@ const useProductStore = defineStore('product', {
 
 
                 { title: '后期处理', single: true },
+                { title: '后期处理入门', link: 'examples/processing/post_processing_basic.html', author: '', photo_url: 'textures/后期处理入门.png' },
                 { title: '虚幻花朵', link: 'examples/processing/webgl_postprocessing_unreal_bloom.html', author: '', photo_url: 'textures/虚幻花朵.png' },
 
 

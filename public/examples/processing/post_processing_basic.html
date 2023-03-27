@@ -70,11 +70,6 @@
             // 场景初始化
             scene = new THREE.Scene()
 
-
-            //坐标轴
-            const axesHelper = new THREE.AxesHelper(10)
-            scene.add(axesHelper)
-
             // 添加环境光
             const light = new THREE.AmbientLight(0xdeedff, 0.8)
             scene.add(light)
@@ -202,6 +197,7 @@
 
         // 后期渲染
         let effectComposer = null
+        let dotScreenPass, glitchPass, unrealBloomPass, rgbShiftPass, smaaPass
         let addProcessing = () => {
             // 效果合成器
             effectComposer = new EffectComposer(renderer)
@@ -214,33 +210,42 @@
             effectComposer.addPass(renderPass)
 
             // 黑白光栅效果
-            const dotScreenPass = new DotScreenPass()
+            dotScreenPass = new DotScreenPass()
             effectComposer.addPass(dotScreenPass)
             dotScreenPass.enabled = false
 
             // 屏幕故障效果
-            const glitchPass = new GlitchPass()
+            glitchPass = new GlitchPass()
             effectComposer.addPass(glitchPass)
             glitchPass.enabled = false
 
             // 添加Bloom敷霜辉光效果到渲染中，它对重现光热、激光、光剑或放射性物质非常有用
-            const unrealBloomPass = new UnrealBloomPass()
+            unrealBloomPass = new UnrealBloomPass()
             effectComposer.addPass(unrealBloomPass)
             unrealBloomPass.strength = 0.3
             unrealBloomPass.radius = 1
             unrealBloomPass.threshold = 0.6
-            // unrealBloomPass.enabled = false
+            unrealBloomPass.enabled = false
 
-            const rgbShiftPass = new ShaderPass(RGBShiftShader)
+            rgbShiftPass = new ShaderPass(RGBShiftShader)
             effectComposer.addPass(rgbShiftPass)
             rgbShiftPass.enabled = false
 
             // 抗锯齿通道
-            const smaaPass = new SMAAPass()
+            smaaPass = new SMAAPass()
             effectComposer.addPass(smaaPass)
             smaaPass.enabled = false
         }
 
+        let debugGui = () => {
+
+            gui = new GUI()
+            gui.add(dotScreenPass, 'enabled').name('黑白光栅')
+            gui.add(glitchPass, 'enabled').name('屏幕故障')
+            gui.add(unrealBloomPass, 'enabled').name('光辉效果')
+            gui.add(rgbShiftPass, 'enabled').name('RGB通道')
+            gui.add(smaaPass, 'enabled').name('抗锯齿')
+        }
 
         let animate = () => {
 
@@ -255,7 +260,7 @@
         addEnvironment()
         loadModel()
         addProcessing()
-
+        debugGui()
         animate()
         expandFunction()
     </script>
