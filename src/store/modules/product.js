@@ -5,8 +5,8 @@ const useProductStore = defineStore('product', {
         return {
             mainList: [
                 { title: '团队作品', single: true },
-                { title: '新圩港-2D', link: 'http://101.132.190.14/xinwei/2d/', author: '', photo_url: 'textures/新圩港-2D.png' },
-                { title: '新圩港-3D', link: 'http://101.132.190.14/xinwei/3d/', author: '', photo_url: 'textures/新圩港-3D.png' },
+                { title: '新圩港-2D', link: 'http://218.92.67.67:9004/', author: '', photo_url: 'textures/新圩港-2D.png' },
+                { title: '新圩港-3D', link: 'http://218.92.67.67:9004/', author: '', photo_url: 'textures/新圩港-3D.png' },
 
 
                 { title: '最新作品', single: true },
@@ -31,6 +31,7 @@ const useProductStore = defineStore('product', {
                 { title: '基础阴影投射', link: 'examples/basic/shadow_basic.html', author: '', photo_url: 'textures/基础阴影投射.png' },
                 { title: '模型导入加载', link: 'examples/basic/import_model_basic.html', author: '', photo_url: 'textures/模型导入加载.png' },
                 { title: '真实性渲染模型', link: 'examples/basic/realistic_render.html', author: '', photo_url: 'textures/真实性渲染模型.png' },
+                { title: '真实性渲染模板', link: 'examples/basic/realistic_render_template.html', author: '', photo_url: 'textures/真实性渲染模板.png' },
 
                 { title: '粒子系统', single: true },
                 { title: '粒子平面墙', link: 'examples/particles/points_wall.html', author: '', photo_url: 'textures/粒子平面墙.png' },
@@ -44,6 +45,9 @@ const useProductStore = defineStore('product', {
                 { title: '融合前端HTML', single: true },
                 { title: '页面滚动', link: 'examples/mixed_html/scroll_page.html', author: '', photo_url: 'textures/页面滚动.png' },
                 { title: '圆点介绍', link: 'examples/mixed_html/point_info_show.html', author: '', photo_url: 'textures/圆点介绍.png' },
+                { title: '加载进度条', link: 'examples/mixed_html/progress_load.html', author: '', photo_url: 'textures/加载进度条.png' },
+
+
 
 
                 { title: '3d可视化', single: true },
