@@ -5,8 +5,8 @@ const useProductStore = defineStore('product', {
         return {
             mainList: [
                 { title: '团队作品', single: true },
-                { title: '新圩港-2D', link: 'http://218.92.67.67:9004/', author: '', photo_url: 'textures/新圩港-2D.png' },
-                { title: '新圩港-3D', link: 'http://218.92.67.67:9004/', author: '', photo_url: 'textures/新圩港-3D.png' },
+                { title: '新圩港-2D', link: '#', author: '', photo_url: 'textures/新圩港-2D.png' },
+                { title: '新圩港-3D', link: '#', author: '', photo_url: 'textures/新圩港-3D.png' },
 
 
                 { title: '最新作品', single: true },
